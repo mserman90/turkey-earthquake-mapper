@@ -293,36 +293,35 @@ export function TurkeySeismicMap({
       {/* Floating Legend & Scale Overlay (Bottom-Left) */}
       <div
         aria-label={t.legendTitle}
-        className="absolute bottom-4 left-4 z-[400] bg-slate-900/90 dark:bg-slate-900/95 light:bg-white/95 backdrop-blur-md border border-slate-700/70 rounded-xl p-3 text-xs text-slate-100 shadow-xl max-w-[290px]"
+        className="absolute bottom-3 left-3 z-[400] bg-slate-950/90 backdrop-blur-md border border-slate-700/80 rounded-xl p-2.5 text-xs text-slate-100 shadow-xl max-w-[230px] sm:max-w-[280px]"
       >
-        <div className="flex items-center gap-1.5 font-semibold mb-2 text-slate-200">
-          <Layers className="w-3.5 h-3.5 text-amber-400" />
-          <span>
-            {t.legendTitle} ({horizonYears} {t.yearsUnit}, Mw ≥ {targetMagnitude})
+        <div className="flex items-center gap-1.5 font-semibold mb-1.5 text-[11px] text-slate-200">
+          <Layers className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <span className="truncate">
+            {t.legendTitle} ({horizonYears}Y, Mw≥{targetMagnitude})
           </span>
         </div>
-        <div className="space-y-1.5 text-[11px]">
-          <div className="flex items-center gap-2">
-            <span className="w-5 h-2 rounded-full bg-emerald-500 inline-block" />
-            <span>{t.riskLow}</span>
+        <div className="grid grid-cols-2 sm:grid-cols-1 gap-x-2 gap-y-1 text-[10px] sm:text-[11px]">
+          <div className="flex items-center gap-1.5">
+            <span className="w-3.5 h-2 rounded-full bg-emerald-500 inline-block shrink-0" />
+            <span className="truncate">{t.riskLow}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-5 h-2 rounded-full bg-yellow-500 inline-block" />
-            <span>{t.riskModerate}</span>
+          <div className="flex items-center gap-1.5">
+            <span className="w-3.5 h-2 rounded-full bg-yellow-500 inline-block shrink-0" />
+            <span className="truncate">{t.riskModerate}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-5 h-2 rounded-full bg-orange-500 inline-block" />
-            <span>{t.riskHigh}</span>
+          <div className="flex items-center gap-1.5">
+            <span className="w-3.5 h-2 rounded-full bg-orange-500 inline-block shrink-0" />
+            <span className="truncate">{t.riskHigh}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-5 h-2 rounded-full bg-red-500 inline-block" />
-            <span>{t.riskCritical}</span>
+          <div className="flex items-center gap-1.5">
+            <span className="w-3.5 h-2 rounded-full bg-red-500 inline-block shrink-0" />
+            <span className="truncate">{t.riskCritical}</span>
           </div>
         </div>
-        <div className="mt-2 pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-400">
+        <div className="mt-1.5 pt-1.5 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-400">
           <span className="flex items-center gap-1">
-            <Navigation className="w-3 h-3 text-sky-400" /> Canlı Deprem:{' '}
-            {liveQuakes.length}
+            <Navigation className="w-3 h-3 text-sky-400" /> {liveQuakes.length}
           </span>
           <span className="flex items-center gap-1 text-amber-300">
             <AlertTriangle className="w-3 h-3" /> Bilimsel Model

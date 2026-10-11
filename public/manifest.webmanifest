@@ -1,0 +1,26 @@
+{
+  "name": "Türkiye Deprem Olasılık Haritası (UDEP / UDES)",
+  "short_name": "Deprem Olasılık",
+  "description": "Bilimsel tekrarlanma (BPT, Lognormal, Weibull) modellerine dayalı Türkiye aktif fay deprem olasılık haritası ve canlı UDES deprem verileri.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "lang": "tr",
+  "categories": ["education", "navigation", "utilities", "weather"],
+  "icons": [
+    {
+      "src": "./pwa-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
