@@ -37,6 +37,8 @@ jobs:
         run: npx vitest run
 
       - name: Build Production Bundle
+        env:
+          VITE_UDESQUAKE_API_KEY: ${{ secrets.VITE_UDESQUAKE_API_KEY }}
         run: npm run build
 
       - name: Setup Pages

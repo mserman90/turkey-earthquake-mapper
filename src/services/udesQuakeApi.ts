@@ -79,7 +79,12 @@ async function fetchWithRetry<T>(
         const headers: Record<string, string> = {
           Accept: 'application/json',
         };
-        if (API_KEY && url.startsWith('/')) {
+        if (
+          API_KEY &&
+          (url.startsWith('/') ||
+            url.includes('corsproxy.io') ||
+            url.includes('api.udesquake.com.tr'))
+        ) {
           headers['X-API-Key'] = API_KEY;
         }
 
