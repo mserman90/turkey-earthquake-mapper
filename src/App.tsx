@@ -7,6 +7,8 @@ import {
   Moon,
   Sun,
   RefreshCw,
+  ExternalLink,
+  Heart,
 } from 'lucide-react';
 import { TURKEY_FAULT_SEGMENTS } from './data/turkeyFaultSegments';
 import { evaluateSegmentProbability } from './lib/probabilityEngine';
@@ -158,8 +160,19 @@ export function App() {
           <span className="truncate">{t.scientificDisclaimerBanner}</span>
         </div>
 
-        {/* Status Indicator, Language & Theme Controls */}
+        {/* Status Indicator, UDES Link, Language & Theme Controls */}
         <div className="flex items-center gap-2">
+          <a
+            href="https://udesquake.com.tr"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/40 text-xs font-semibold text-sky-300 transition"
+            title="UDES (UdesQuake) Resmi Web Sitesi"
+          >
+            <span>UDES</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+
           <button
             type="button"
             onClick={() => refetchEvents()}
@@ -240,6 +253,109 @@ export function App() {
           liveQuakes={filteredLiveQuakes}
         />
       </main>
+
+      {/* Bottom Acknowledgments & Resource Links Footer */}
+      <footer className="shrink-0 bg-slate-950 border-t border-slate-800/90 px-4 py-2 text-[11px] text-slate-400 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5">
+          <Heart className="w-3.5 h-3.5 text-red-400 fill-red-400/20 shrink-0" />
+          <span className="font-semibold text-slate-200">
+            {language === 'tr' ? 'Teşekkürler & Kaynaklar:' : 'Acknowledgments & Sources:'}
+          </span>
+          <span>
+            {language === 'tr'
+              ? 'Gerçek zamanlı deprem verileri ve API altyapısı için'
+              : 'Special thanks to'}
+          </span>
+          <a
+            href="https://udesquake.com.tr"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sky-400 hover:text-sky-300 font-bold underline underline-offset-2"
+          >
+            UDES (UdesQuake)
+          </a>
+          <span>
+            {language === 'tr'
+              ? 'ekibine ve tüm yerbilim kaynaklarına teşekkür ederiz.'
+              : 'and all geophysical data providers.'}
+          </span>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3 text-[11px]">
+          <a
+            href="https://udesquake.com.tr"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-sky-300 transition flex items-center gap-1"
+          >
+            <span>UDES Web</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+          <a
+            href="https://api.udesquake.com.tr/api/status"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-sky-300 transition flex items-center gap-1"
+          >
+            <span>UDES API</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+          <a
+            href="https://www.mta.gov.tr/v3.0/hizmetler/yenilenmis-diri-fay-haritalari"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-amber-300 transition flex items-center gap-1"
+          >
+            <span>MTA Diri Fay</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+          <a
+            href="https://deprem.afad.gov.tr"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-slate-200 transition flex items-center gap-1"
+          >
+            <span>AFAD</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+          <a
+            href="http://www.koeri.boun.edu.tr/scripts/lst5.asp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-slate-200 transition flex items-center gap-1"
+          >
+            <span>Kandilli (KOERI)</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+          <a
+            href="https://www.emsc-csem.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-slate-200 transition flex items-center gap-1"
+          >
+            <span>EMSC</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+          <a
+            href="https://www.openstreetmap.org/copyright"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-slate-200 transition flex items-center gap-1"
+          >
+            <span>OpenStreetMap</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+          <a
+            href="https://github.com/mserman90/turkey-earthquake-mapper"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-emerald-300 transition flex items-center gap-1"
+          >
+            <span>GitHub</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }

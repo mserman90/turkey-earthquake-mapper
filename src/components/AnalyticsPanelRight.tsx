@@ -10,6 +10,8 @@ import {
   MapPin,
   ShieldAlert,
   TrendingUp,
+  ExternalLink,
+  Heart,
 } from 'lucide-react';
 import type {
   FaultSegmentFeature,
@@ -609,6 +611,98 @@ export function AnalyticsPanelRight({
                 güven aralığı (P5–P95) olarak her segmentte açıkça
                 hesaplanmaktadır.
               </p>
+            </div>
+
+            {/* Teşekkürler & Yararlanılan Kurum/Veri Kaynakları (Links) */}
+            <div className="bg-slate-950 border border-amber-500/30 rounded-xl p-3.5 space-y-3">
+              <h3 className="font-bold text-amber-300 flex items-center gap-1.5">
+                <Heart className="w-4 h-4 text-red-400 fill-red-400/20" />
+                <span>
+                  {language === 'tr'
+                    ? 'Teşekkürler & Yararlanılan Kaynaklar'
+                    : 'Acknowledgments & Data Sources'}
+                </span>
+              </h3>
+              <p className="text-[11px] text-slate-300 leading-relaxed">
+                {language === 'tr'
+                  ? 'Bu açık kaynaklı bilimsel farkındalık projesi, gerçek zamanlı sismik telemetri sağlayan UDES (UdesQuake) platformuna ve Türkiye’nin aktif tektonik/paleosismolojik mirasını belgeleyen tüm yerbilimcilere teşekkür sunar:'
+                  : 'This open-source scientific awareness project gratefully acknowledges the UDES (UdesQuake) platform for real-time seismic telemetry and the earth scientists documenting Turkey’s active tectonics:'}
+              </p>
+
+              <div className="space-y-1.5 text-[11px]">
+                <a
+                  href="https://udesquake.com.tr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-sky-300 font-semibold transition"
+                >
+                  <span>UDES / UdesQuake (Canlı Deprem & Erken Uyarı)</span>
+                  <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                </a>
+                <a
+                  href="https://api.udesquake.com.tr/api/status"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-sky-300 transition"
+                >
+                  <span>UdesQuake Açık Sismik API (api.udesquake.com.tr)</span>
+                  <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                </a>
+                <a
+                  href="https://www.mta.gov.tr/v3.0/hizmetler/yenilenmis-diri-fay-haritalari"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-amber-300 transition"
+                >
+                  <span>MTA Türkiye Yenilenmiş Diri Fay Haritaları</span>
+                  <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                </a>
+                <a
+                  href="https://deprem.afad.gov.tr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-200 transition"
+                >
+                  <span>AFAD Deprem Dairesi Başkanlığı</span>
+                  <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                </a>
+                <a
+                  href="http://www.koeri.boun.edu.tr/scripts/lst5.asp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-200 transition"
+                >
+                  <span>Boğaziçi Üniversitesi Kandilli Rasathanesi (KOERI)</span>
+                  <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                </a>
+                <a
+                  href="https://www.emsc-csem.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-200 transition"
+                >
+                  <span>EMSC (Avrupa-Akdeniz Sismoloji Merkezi)</span>
+                  <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                </a>
+                <a
+                  href="https://www.openstreetmap.org/copyright"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-200 transition"
+                >
+                  <span>OpenStreetMap Vakfı & Katkıda Bulunanlar</span>
+                  <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                </a>
+                <a
+                  href="https://github.com/mserman90/turkey-earthquake-mapper"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-emerald-300 transition"
+                >
+                  <span>GitHub Açık Kaynak Deposu (MIT Lisansı)</span>
+                  <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                </a>
+              </div>
             </div>
           </div>
         )}
