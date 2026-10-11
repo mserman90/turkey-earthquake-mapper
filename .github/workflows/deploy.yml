@@ -36,6 +36,13 @@ jobs:
       - name: Run Unit & Integration Tests
         run: npx vitest run
 
+      - name: Refresh Live UdesQuake Telemetry Snapshots
+        env:
+          UDESQUAKE_API_KEY: ${{ secrets.VITE_UDESQUAKE_API_KEY }}
+        run: |
+          curl -s -f -H "X-API-Key: $UDESQUAKE_API_KEY" "https://api.udesquake.com.tr/api/status" -o public/status-snapshot.json || true
+          curl -s -f -H "X-API-Key: $UDESQUAKE_API_KEY" "https://api.udesquake.com.tr/api/events?limit=300" -o public/events-snapshot.json || true
+
       - name: Build Production Bundle
         env:
           VITE_UDESQUAKE_API_KEY: ${{ secrets.VITE_UDESQUAKE_API_KEY }}

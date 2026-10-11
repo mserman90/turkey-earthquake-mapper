@@ -16,3 +16,9 @@ body {
   font-family: inherit;
   background-color: #090d16;
 }
+
+/* Keyless OpenStreetMap Dark Mode Filter */
+.leaflet-tile.map-tiles-dark,
+.map-tiles-dark .leaflet-tile {
+  filter: invert(100%) hue-rotate(180deg) brightness(92%) contrast(90%) saturate(75%);
+}

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import {
   MapContainer,
   TileLayer,
@@ -73,11 +73,7 @@ export function TurkeySeismicMap({
 
   const t = TRANSLATIONS[language];
 
-  const tileUrl = useMemo(() => {
-    return theme === 'dark'
-      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-  }, [theme]);
+  const tileUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 
   return (
     <div
@@ -88,13 +84,14 @@ export function TurkeySeismicMap({
         center={[39.05, 34.8]}
         zoom={6}
         minZoom={5}
-        maxZoom={14}
+        maxZoom={18}
         zoomControl={true}
         className="w-full h-full z-0"
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> | MTA Diri Fay & UdesQuake'
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | MTA Diri Fay & UdesQuake'
           url={tileUrl}
+          className={theme === 'dark' ? 'map-tiles-dark' : 'map-tiles-light'}
         />
 
         <MapViewportController />
