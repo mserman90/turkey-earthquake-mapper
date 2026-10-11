@@ -12,7 +12,7 @@ import type {
   UdesQuakeEvent,
 } from '../types/seismic';
 import { useMapperStore } from '../store/useMapperStore';
-import { getProbabilityColor } from './TurkeySeismicMap';
+import { getProbabilityColor } from '../lib/colorScale';
 
 interface ExecutiveSummaryStripProps {
   segments: FaultSegmentFeature[];

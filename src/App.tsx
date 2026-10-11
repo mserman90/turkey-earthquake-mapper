@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, lazy, Suspense } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   Activity,
@@ -23,11 +23,24 @@ import {
 } from './services/udesQuakeApi';
 import { useMapperStore } from './store/useMapperStore';
 import { TRANSLATIONS } from './lib/i18n';
-import { ControlPanelLeft } from './components/ControlPanelLeft';
-import { TurkeySeismicMap } from './components/TurkeySeismicMap';
-import { AnalyticsPanelRight } from './components/AnalyticsPanelRight';
 import { ExecutiveSummaryStrip } from './components/ExecutiveSummaryStrip';
 import type { ProbabilityResult } from './types/seismic';
+
+const ControlPanelLeft = lazy(() =>
+  import('./components/ControlPanelLeft').then((m) => ({
+    default: m.ControlPanelLeft,
+  }))
+);
+const TurkeySeismicMap = lazy(() =>
+  import('./components/TurkeySeismicMap').then((m) => ({
+    default: m.TurkeySeismicMap,
+  }))
+);
+const AnalyticsPanelRight = lazy(() =>
+  import('./components/AnalyticsPanelRight').then((m) => ({
+    default: m.AnalyticsPanelRight,
+  }))
+);
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -298,27 +311,47 @@ export function App() {
         {/* Left Control Panel: Always visible on lg+, or when mobileView === 'controls' */}
         <div
           className={`${
-            mobileView === 'controls' ? 'flex flex-1 overflow-hidden' : 'hidden'
+            mobileView === 'controls'
+              ? 'flex flex-1 overflow-hidden'
+              : 'mobile-tab-inactive'
           } lg:flex lg:h-full`}
         >
-          <ControlPanelLeft
-            segments={filteredSegments}
-            probabilitiesById={probabilitiesById}
-          />
+          <Suspense
+            fallback={
+              <div className="w-full lg:w-80 bg-slate-900/95 p-4 text-xs text-slate-400 animate-pulse">
+                Kontroller yükleniyor...
+              </div>
+            }
+          >
+            <ControlPanelLeft
+              segments={filteredSegments}
+              probabilitiesById={probabilitiesById}
+            />
+          </Suspense>
         </div>
 
         {/* Center Interactive Map: Always visible on lg+, or when mobileView === 'map' */}
         <section
           aria-label="Türkiye Deprem Olasılık Haritası"
           className={`${
-            mobileView === 'map' ? 'flex-1 flex flex-col' : 'hidden'
+            mobileView === 'map'
+              ? 'flex-1 flex flex-col'
+              : 'mobile-tab-inactive'
           } lg:flex lg:flex-1 h-full relative`}
         >
-          <TurkeySeismicMap
-            segments={filteredSegments}
-            probabilitiesById={probabilitiesById}
-            liveQuakes={filteredLiveQuakes}
-          />
+          <Suspense
+            fallback={
+              <div className="w-full h-full flex items-center justify-center bg-slate-950 text-xs text-amber-400 animate-pulse">
+                Türkiye Sismik Haritası Hazırlanıyor...
+              </div>
+            }
+          >
+            <TurkeySeismicMap
+              segments={filteredSegments}
+              probabilitiesById={probabilitiesById}
+              liveQuakes={filteredLiveQuakes}
+            />
+          </Suspense>
 
           {/* Mobile Floating Selected Fault Quick-Card on Map (Tap to open full analysis) */}
           {activeSegment && activeSegmentProb && (
@@ -357,14 +390,22 @@ export function App() {
           className={`${
             mobileView === 'analysis' || mobileView === 'live'
               ? 'flex flex-1 overflow-hidden'
-              : 'hidden'
+              : 'mobile-tab-inactive'
           } lg:flex lg:h-full`}
         >
-          <AnalyticsPanelRight
-            segments={filteredSegments}
-            probabilitiesById={probabilitiesById}
-            liveQuakes={filteredLiveQuakes}
-          />
+          <Suspense
+            fallback={
+              <div className="w-full lg:w-96 bg-slate-900/95 p-4 text-xs text-slate-400 animate-pulse">
+                Analiz paneli yükleniyor...
+              </div>
+            }
+          >
+            <AnalyticsPanelRight
+              segments={filteredSegments}
+              probabilitiesById={probabilitiesById}
+              liveQuakes={filteredLiveQuakes}
+            />
+          </Suspense>
         </div>
       </main>
 

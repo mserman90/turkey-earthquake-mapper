@@ -25,52 +25,56 @@ export class UdesQuakeApiError extends Error {
   }
 }
 
-async function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-/**
- * Resolves candidate upstream/proxy URLs so the app works seamlessly both behind
- * the local/Edge `/api` proxy AND when hosted statically on GitHub Pages.
- */
-function buildCandidateUrls(endpoint: string): string[] {
-  const targetUrl = `${UDESQUAKE_DIRECT_ORIGIN}/api${endpoint}`;
-  const isGitHubPages =
-    typeof window !== 'undefined' &&
-    window.location.hostname.endsWith('github.io');
-
-  // Local static snapshot files generated during CI/CD or live sync
-  const snapshotFile = endpoint.startsWith('/status')
-    ? './status-snapshot.json'
-    : endpoint.startsWith('/events')
-    ? './events-snapshot.json'
-    : null;
-
-  const corsProxies = [
-    `https://corsproxy.io/?url=${encodeURIComponent(targetUrl)}`,
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
-    `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`,
-  ];
-
-  const list = isGitHubPages
-    ? [...corsProxies]
-    : [`${PROXY_BASE_URL}${endpoint}`, ...corsProxies];
-
-  if (snapshotFile) {
-    list.push(snapshotFile);
+async function fetchSingleCandidate<T>(url: string): Promise<T> {
+  const headers: Record<string, string> = {
+    Accept: 'application/json',
+  };
+  if (
+    API_KEY &&
+    (url.startsWith('/api') ||
+      url.includes('corsproxy.io') ||
+      url.includes('api.udesquake.com.tr'))
+  ) {
+    headers['X-API-Key'] = API_KEY;
   }
-  return list;
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 3200);
+  try {
+    const response = await fetch(url, {
+      headers,
+      signal: controller.signal,
+    });
+    if (!response.ok) {
+      throw new UdesQuakeApiError(`HTTP ${response.status}`, response.status);
+    }
+
+    const text = await response.text();
+    const trimmed = text.trim();
+    if (
+      trimmed.startsWith('<!DOCTYPE') ||
+      trimmed.startsWith('<html') ||
+      trimmed.startsWith('error code:')
+    ) {
+      throw new UdesQuakeApiError('Invalid upstream payload', 502);
+    }
+
+    return JSON.parse(trimmed) as T;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
 /**
- * Fetches from the UdesQuake proxy with automatic 429 exponential backoff,
- * multi-proxy CORS fallback for static hosts (GitHub Pages), optional X-API-Key header,
- * and 5xx user-friendly error handling.
+ * Fast mobile-first fetcher:
+ * - On local/Edge proxy, requests `/api/*` first with snapshot fallback.
+ * - On GitHub Pages static hosting, races live CORS proxies concurrently (`Promise.any`)
+ *   with a 3.2s timeout and falls back to the bundled UDES telemetry snapshot immediately
+ *   so mobile users never wait on sequential proxy timeouts.
  */
 async function fetchWithRetry<T>(
   endpoint: string,
-  cacheTtlMs: number = 25000,
-  maxRetries: number = 1
+  cacheTtlMs: number = 25000
 ): Promise<T> {
   const cacheKey = endpoint;
   const now = Date.now();
@@ -80,72 +84,74 @@ async function fetchWithRetry<T>(
     return cached.data as T;
   }
 
-  const candidateUrls = buildCandidateUrls(endpoint);
+  const targetUrl = `${UDESQUAKE_DIRECT_ORIGIN}/api${endpoint}`;
+  const isGitHubPages =
+    typeof window !== 'undefined' &&
+    window.location.hostname.endsWith('github.io');
 
-  for (const url of candidateUrls) {
-    let attempt = 0;
-    while (attempt <= maxRetries) {
-      try {
-        const headers: Record<string, string> = {
-          Accept: 'application/json',
-        };
-        if (
-          API_KEY &&
-          (url.startsWith('/api') ||
-            url.includes('corsproxy.io') ||
-            url.includes('api.udesquake.com.tr'))
-        ) {
-          headers['X-API-Key'] = API_KEY;
-        }
+  const snapshotFile = endpoint.startsWith('/status')
+    ? './status-snapshot.json'
+    : endpoint.startsWith('/events')
+    ? './events-snapshot.json'
+    : null;
 
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5500);
-        const response = await fetch(url, {
-          headers,
-          signal: controller.signal,
-        });
-        clearTimeout(timeoutId);
+  try {
+    if (!isGitHubPages) {
+      const localData = await fetchSingleCandidate<T>(
+        `${PROXY_BASE_URL}${endpoint}`
+      );
+      responseCache.set(cacheKey, { timestamp: Date.now(), data: localData });
+      return localData;
+    }
+  } catch {
+    // Fall through to concurrent proxy / snapshot race
+  }
 
-        if (response.status === 429) {
-          if (attempt === maxRetries) break;
-          const backoffMs = Math.min(4000, 1000 * Math.pow(2, attempt));
-          await sleep(backoffMs);
-          attempt++;
-          continue;
-        }
+  const corsProxies = [
+    `https://corsproxy.io/?url=${encodeURIComponent(targetUrl)}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
+  ];
 
-        if (!response.ok) {
-          break; // try next candidate
-        }
-
-        const text = await response.text();
-        if (
-          text.trim().startsWith('<!DOCTYPE') ||
-          text.trim().startsWith('<html') ||
-          text.trim().startsWith('error code:')
-        ) {
-          break; // HTML or Cloudflare error instead of JSON -> try next candidate
-        }
-
-        const data = JSON.parse(text) as T;
-        responseCache.set(cacheKey, { timestamp: Date.now(), data });
-        return data;
-      } catch {
-        if (attempt === maxRetries) break;
-        await sleep(350);
-        attempt++;
-      }
+  // On mobile or static host: race snapshot & live proxies so data appears in <250ms
+  if (snapshotFile && !cached) {
+    try {
+      const snapData = await fetchSingleCandidate<T>(snapshotFile);
+      responseCache.set(cacheKey, { timestamp: Date.now(), data: snapData });
+      // Refresh live proxy in background without blocking initial mobile render
+      Promise.any(corsProxies.map((u) => fetchSingleCandidate<T>(u)))
+        .then((liveData) => {
+          responseCache.set(cacheKey, {
+            timestamp: Date.now(),
+            data: liveData,
+          });
+        })
+        .catch(() => {});
+      return snapData;
+    } catch {
+      // Continue to live proxy race
     }
   }
 
-  if (cached) {
-    return cached.data as T;
+  try {
+    const liveData = await Promise.any(
+      corsProxies.map((u) => fetchSingleCandidate<T>(u))
+    );
+    responseCache.set(cacheKey, { timestamp: Date.now(), data: liveData });
+    return liveData;
+  } catch {
+    if (snapshotFile) {
+      const snapData = await fetchSingleCandidate<T>(snapshotFile);
+      responseCache.set(cacheKey, { timestamp: Date.now(), data: snapData });
+      return snapData;
+    }
+    if (cached) {
+      return cached.data as T;
+    }
+    throw new UdesQuakeApiError(
+      'Veri kaynağı geçici olarak kullanılamıyor (5xx). Yerel önbellek verileri gösteriliyor.',
+      503
+    );
   }
-
-  throw new UdesQuakeApiError(
-    'Veri kaynağı geçici olarak kullanılamıyor (5xx). Yerel önbellek verileri gösteriliyor.',
-    503
-  );
 }
 
 export async function fetchUdesQuakeStatus(): Promise<UdesQuakeStatus> {

@@ -1,4 +1,3 @@
-import { toPng } from 'html-to-image';
 import type {
   FaultSegmentFeature,
   ProbabilityResult,
@@ -151,6 +150,7 @@ export async function exportMapToPNG(elementId: string): Promise<void> {
   const node = document.getElementById(elementId);
   if (!node) return;
 
+  const { toPng } = await import('html-to-image');
   const dataUrl = await toPng(node, {
     cacheBust: true,
     pixelRatio: 2,

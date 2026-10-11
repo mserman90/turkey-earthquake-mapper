@@ -20,7 +20,7 @@ import type {
 } from '../types/seismic';
 import { useMapperStore } from '../store/useMapperStore';
 import { TRANSLATIONS } from '../lib/i18n';
-import { getProbabilityColor } from './TurkeySeismicMap';
+import { getProbabilityColor } from '../lib/colorScale';
 import { fetchSeismicHistory } from '../services/udesQuakeApi';
 
 interface AnalyticsPanelRightProps {
@@ -478,7 +478,7 @@ export function AnalyticsPanelRight({
                         seg.coordinates[Math.floor(seg.coordinates.length / 2)];
                       if (mid) flyToLocation(mid[1], mid[0], 8);
                     }}
-                    className="w-full text-left bg-slate-950/90 hover:bg-slate-900 border border-slate-800 rounded-xl p-3 transition cursor-pointer space-y-1.5"
+                    className="deferred-list-item w-full text-left bg-slate-950/90 hover:bg-slate-900 border border-slate-800 rounded-xl p-3 transition cursor-pointer space-y-1.5"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-xs font-bold text-slate-100 truncate">
@@ -520,7 +520,7 @@ export function AnalyticsPanelRight({
                   key={ev.event_id}
                   type="button"
                   onClick={() => flyToLocation(ev.latitude, ev.longitude, 10)}
-                  className="w-full text-left bg-slate-950/85 hover:bg-slate-900 border border-slate-800 rounded-lg p-2.5 flex items-center justify-between gap-3 transition cursor-pointer"
+                  className="deferred-list-item w-full text-left bg-slate-950/85 hover:bg-slate-900 border border-slate-800 rounded-lg p-2.5 flex items-center justify-between gap-3 transition cursor-pointer"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
                     <span

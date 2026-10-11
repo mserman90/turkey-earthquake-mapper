@@ -22,3 +22,26 @@ body {
 .map-tiles-dark .leaflet-tile {
   filter: invert(100%) hue-rotate(180deg) brightness(92%) contrast(90%) saturate(75%);
 }
+
+/* Modern Web Guidance: Defer rendering for off-screen list items */
+.deferred-list-item {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 64px;
+}
+
+/* Modern Web Guidance: Preserve structural DOM state on mobile tab switches with fallback */
+@media (max-width: 1023px) {
+  .mobile-tab-inactive {
+    display: none;
+  }
+
+  @supports (content-visibility: hidden) {
+    .mobile-tab-inactive {
+      display: flex;
+      content-visibility: hidden;
+      height: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+  }
+}
