@@ -20,10 +20,10 @@ Türkiye’deki aktif fay segmentleri için bilimsel tekrarlanma (**renewal**) m
    - **Poisson (Zaman-Bağımsız Referans Model)** ve **Olasılık Kazancı (Probability Gain)**
    - **10 / 30 / 50 Yıllık** projeksiyon pencereleri ($\Delta t$) ve **Mw ≥ 6.5 / 7.0 / 7.5** büyüklük eşikleri
    - **%90 Güven Aralığı (P5–P95)** paleosismik parametre belirsizlik analizi ve **Sismik Boşluk Skoru (0–100)**
-2. **Gerçek Zamanlı UDES (UdesQuake) API Entegrasyonu (`src/services/udesQuakeApi.ts` & `server/proxyServer.mjs`)**:
-   - `/api/status`, `/api/events`, `/api/seismic_history` entegrasyonu
-   - CORS, Rate-Limit koruması (100 req/dk anahtarsız, 500 req/dk `X-API-Key` ile), 429 Exponential Backoff ve 5xx önbellek (cache) yedeklemesi
-   - 40 saniyelik otomatik canlı deprem yenilemesi
+2. **Gerçek Zamanlı Sismik Telemetri (UDES & AFAD)**:
+   - **UDES (UdesQuake) API (`src/services/udesQuakeApi.ts`)**: `/api/status`, `/api/events`, `/api/seismic_history` entegrasyonu, `X-API-Key` kota desteği, 429 Exponential Backoff ve otomatik önbellekleme.
+   - **AFAD Resmi Deprem Servisi (`src/services/afadApi.ts`)**: [https://deprem.afad.gov.tr/event-service](https://deprem.afad.gov.tr/event-service) üzerinden resmi AFAD katalog verisi entegrasyonu (`/apiv2/event/filter`).
+   - **Çoklu Kaynak Birleştirme & Tekilleştirme**: Kullanıcı UDES, AFAD veya Tümünü (`UDES + AFAD`) seçebilir; 90 saniye ve 0.15 derece toleransla mükerrer olaylar temizlenir.
 3. **İnteraktif Türkiye Haritası (`src/components/TurkeySeismicMap.tsx`)**:
    - Ücretsiz ve API anahtarı gerektirmeyen (**keyless**) **OpenStreetMap** harita altyapısı (Koyu / Açık tema filtreli)
    - MTA Diri Fay Haritası ve paleosismoloji literatürüyle uyumlu **12 ana aktif fay segmenti** (KAF Kuzey/Orta Kol, Yedisu, Erzincan-Niksar, DAF Palu-Bingöl, Pazarcık-Amanos, İzmir-Tuzla, Büyük Menderes, Tuz Gölü-Ecemiş)
@@ -52,6 +52,7 @@ Bu açık kaynaklı bilimsel farkındalık ve görselleştirme projesinin hayata
 | :--- | :--- | :--- |
 | **UDES (UdesQuake)** | Gerçek Zamanlı Deprem Takip, Erken Uyarı ve Çoklu-Ajans Veri Platformu | [https://udesquake.com.tr](https://udesquake.com.tr) |
 | **UDES (UdesQuake) API** | Canlı Depremler (`/api/events`), Sistem Durumu (`/api/status`) ve Bölgesel Geçmiş (`/api/seismic_history`) | [https://api.udesquake.com.tr/api/status](https://api.udesquake.com.tr/api/status) |
+| **AFAD Deprem Veri Servisi** | T.C. İçişleri Bakanlığı AFAD Resmi Deprem Bilgi ve Olay Servisi (`/apiv2/event/filter`) | [https://deprem.afad.gov.tr/event-service](https://deprem.afad.gov.tr/event-service) |
 | **MTA Genel Müdürlüğü** | Türkiye Yenilenmiş Diri Fay Haritaları ve Yerbilimleri Portalı | [https://www.mta.gov.tr/v3.0/hizmetler/yenilenmis-diri-fay-haritalari](https://www.mta.gov.tr/v3.0/hizmetler/yenilenmis-diri-fay-haritalari) |
 | **AFAD** | T.C. İçişleri Bakanlığı Afet ve Acil Durum Yönetimi Başkanlığı – Deprem Katalogları | [https://deprem.afad.gov.tr](https://deprem.afad.gov.tr) |
 | **Kandilli Rasathanesi (KOERI)** | Boğaziçi Üniversitesi Bölgesel Deprem-Tsunami İzleme ve Değerlendirme Merkezi | [http://www.koeri.boun.edu.tr/scripts/lst5.asp](http://www.koeri.boun.edu.tr/scripts/lst5.asp) |

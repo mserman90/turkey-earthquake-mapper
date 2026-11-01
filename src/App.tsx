@@ -21,6 +21,7 @@ import {
   fetchUdesQuakeEvents,
   fetchUdesQuakeStatus,
 } from './services/udesQuakeApi';
+import { fetchAfadEvents, mergeSeismicEvents } from './services/afadApi';
 import { useMapperStore } from './store/useMapperStore';
 import { TRANSLATIONS } from './lib/i18n';
 import { ExecutiveSummaryStrip } from './components/ExecutiveSummaryStrip';
@@ -61,6 +62,7 @@ export function App() {
     searchQuery,
     liveQuakesTimeWindowHours,
     liveQuakesMinMagnitude,
+    seismicDataSource,
     selectedSegmentId,
     setActiveRightTab,
   } = useMapperStore();
@@ -129,16 +131,44 @@ export function App() {
     retry: 2,
   });
 
+  // Poll AFAD Official Event Service (deprem.afad.gov.tr/event-service) every 45 seconds
+  const {
+    data: afadRawEvents = [],
+    isFetching: fetchingAfad,
+    refetch: refetchAfad,
+  } = useQuery({
+    queryKey: ['afad-events', liveQuakesMinMagnitude],
+    queryFn: () =>
+      fetchAfadEvents({
+        limit: 300,
+        minmag: liveQuakesMinMagnitude,
+      }),
+    refetchInterval: 45000,
+    retry: 2,
+  });
+
+  const isFetchingAnySeismic = fetchingEvents || fetchingAfad;
+
+  const handleRefreshSeismic = () => {
+    refetchEvents();
+    refetchAfad();
+  };
+
+  // Combine & Deduplicate UDES + AFAD based on user's selected data source
+  const combinedLiveQuakes = useMemo(() => {
+    return mergeSeismicEvents(rawEvents, afadRawEvents, seismicDataSource);
+  }, [rawEvents, afadRawEvents, seismicDataSource]);
+
   // Filter live quakes by selected time window (24h, 72h, 168h) and minimum magnitude
   const filteredLiveQuakes = useMemo(() => {
-    if (rawEvents.length === 0) return [];
-    const latestTimestamp = Math.max(...rawEvents.map((e) => e.timestamp));
+    if (combinedLiveQuakes.length === 0) return [];
+    const latestTimestamp = Math.max(...combinedLiveQuakes.map((e) => e.timestamp));
     const cutoffSec = latestTimestamp - liveQuakesTimeWindowHours * 3600;
-    return rawEvents.filter(
+    return combinedLiveQuakes.filter(
       (ev) =>
         ev.magnitude >= liveQuakesMinMagnitude && ev.timestamp >= cutoffSec
     );
-  }, [rawEvents, liveQuakesTimeWindowHours, liveQuakesMinMagnitude]);
+  }, [combinedLiveQuakes, liveQuakesTimeWindowHours, liveQuakesMinMagnitude]);
 
   // Filter fault segments by Region and Search Query
   const filteredSegments = useMemo(() => {
@@ -249,11 +279,22 @@ export function App() {
             <ExternalLink className="w-3 h-3" />
           </a>
 
+          <a
+            href="https://deprem.afad.gov.tr/event-service"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 text-xs font-semibold text-red-300 transition"
+            title="AFAD Deprem Veri Servisi (deprem.afad.gov.tr/event-service)"
+          >
+            <span>AFAD</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+
           <button
             type="button"
-            onClick={() => refetchEvents()}
+            onClick={handleRefreshSeismic}
             className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs hover:border-slate-700 transition cursor-pointer"
-            title="Canlı Deprem Verisini Yenile"
+            title="Canlı Deprem Verilerini Yenile (UDES + AFAD)"
           >
             <span
               className={`w-2 h-2 rounded-full ${
@@ -269,7 +310,7 @@ export function App() {
             </span>
             <RefreshCw
               className={`w-3.5 h-3.5 text-slate-400 ${
-                fetchingEvents ? 'animate-spin text-sky-400' : ''
+                isFetchingAnySeismic ? 'animate-spin text-sky-400' : ''
               }`}
             />
           </button>
@@ -533,12 +574,12 @@ export function App() {
             <ExternalLink className="w-3 h-3" />
           </a>
           <a
-            href="https://deprem.afad.gov.tr"
+            href="https://deprem.afad.gov.tr/event-service"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-slate-200 transition flex items-center gap-1"
+            className="hover:text-red-300 transition flex items-center gap-1 font-medium"
           >
-            <span>AFAD</span>
+            <span>AFAD Event Service</span>
             <ExternalLink className="w-3 h-3" />
           </a>
           <a

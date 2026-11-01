@@ -67,6 +67,8 @@ export function ControlPanelLeft({
     setLiveQuakesTimeWindowHours,
     liveQuakesMinMagnitude,
     setLiveQuakesMinMagnitude,
+    seismicDataSource,
+    setSeismicDataSource,
     showFaultProbabilityLayer,
     showLiveQuakesLayer,
     showSeismicGapBadges,
@@ -372,6 +374,51 @@ export function ControlPanelLeft({
             aria-label={t.minMagLabel}
             className="w-full accent-sky-400 cursor-pointer"
           />
+
+          {/* Sismik Veri Kaynağı Seçimi (UDES & AFAD) */}
+          <div className="pt-2 border-t border-slate-800/80 space-y-1">
+            <span className="block text-[10px] font-semibold text-slate-300">
+              {language === 'tr' ? 'Veri Kaynağı (Telemetri)' : 'Data Source'}
+            </span>
+            <div className="grid grid-cols-3 gap-1 bg-slate-900/90 p-1 rounded-lg border border-slate-800 text-[10px]">
+              <button
+                type="button"
+                onClick={() => setSeismicDataSource('ALL')}
+                className={`py-1 rounded font-semibold transition cursor-pointer ${
+                  seismicDataSource === 'ALL'
+                    ? 'bg-amber-500 text-slate-950 font-bold'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+                title="UDES + AFAD Tüm Depremler"
+              >
+                {language === 'tr' ? 'UDES+AFAD' : 'All'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setSeismicDataSource('UDES')}
+                className={`py-1 rounded font-semibold transition cursor-pointer ${
+                  seismicDataSource === 'UDES'
+                    ? 'bg-sky-500 text-slate-950 font-bold'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+                title="UDES (UdesQuake Çoklu-Ajans)"
+              >
+                UDES
+              </button>
+              <button
+                type="button"
+                onClick={() => setSeismicDataSource('AFAD')}
+                className={`py-1 rounded font-semibold transition cursor-pointer ${
+                  seismicDataSource === 'AFAD'
+                    ? 'bg-red-500 text-white font-bold'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+                title="AFAD Resmi (deprem.afad.gov.tr/event-service)"
+              >
+                AFAD
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

@@ -17,6 +17,7 @@ interface MapperState {
   searchQuery: string;
   liveQuakesTimeWindowHours: 24 | 72 | 168;
   liveQuakesMinMagnitude: number;
+  seismicDataSource: 'ALL' | 'UDES' | 'AFAD';
   showFaultProbabilityLayer: boolean;
   showLiveQuakesLayer: boolean;
   showSeismicGapBadges: boolean;
@@ -40,6 +41,7 @@ interface MapperState {
   setSearchQuery: (query: string) => void;
   setLiveQuakesTimeWindowHours: (hours: 24 | 72 | 168) => void;
   setLiveQuakesMinMagnitude: (minMag: number) => void;
+  setSeismicDataSource: (source: 'ALL' | 'UDES' | 'AFAD') => void;
   toggleLayer: (
     layer: 'faults' | 'liveQuakes' | 'seismicGaps'
   ) => void;
@@ -63,6 +65,7 @@ export const useMapperStore = create<MapperState>()(
       searchQuery: '',
       liveQuakesTimeWindowHours: 24,
       liveQuakesMinMagnitude: 1.5,
+      seismicDataSource: 'ALL',
       showFaultProbabilityLayer: true,
       showLiveQuakesLayer: true,
       showSeismicGapBadges: true,
@@ -86,6 +89,7 @@ export const useMapperStore = create<MapperState>()(
         set({ liveQuakesTimeWindowHours }),
       setLiveQuakesMinMagnitude: (liveQuakesMinMagnitude) =>
         set({ liveQuakesMinMagnitude }),
+      setSeismicDataSource: (seismicDataSource) => set({ seismicDataSource }),
       toggleLayer: (layer) =>
         set((state) => {
           if (layer === 'faults') {
@@ -117,6 +121,7 @@ export const useMapperStore = create<MapperState>()(
         language: state.language,
         theme: state.theme,
         liveQuakesMinMagnitude: state.liveQuakesMinMagnitude,
+        seismicDataSource: state.seismicDataSource,
       }),
     }
   )

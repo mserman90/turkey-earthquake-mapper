@@ -25,6 +25,46 @@ app.use('/api', limiter);
 // In-memory proxy cache (30s for live data, 1h for seismic_history)
 const proxyCache = new Map();
 
+const AFAD_BASE = 'https://deprem.afad.gov.tr/apiv2/event';
+
+// AFAD Event Service Proxy Route
+app.get('/api/afad/:endpoint', async (req, res) => {
+  const endpoint = req.params.endpoint;
+  const queryString = new URLSearchParams(req.query).toString();
+  const targetUrl = `${AFAD_BASE}/${endpoint}${queryString ? `?${queryString}` : ''}`;
+
+  const cached = proxyCache.get(targetUrl);
+  if (cached && Date.now() - cached.timestamp < 30 * 1000) {
+    res.setHeader('X-Cache', 'HIT');
+    return res.json(cached.data);
+  }
+
+  try {
+    const upstream = await fetch(targetUrl, {
+      headers: {
+        Accept: 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+      },
+    });
+    if (!upstream.ok) {
+      return res.status(upstream.status).json({ error: `AFAD returned ${upstream.status}` });
+    }
+    const data = await upstream.json();
+    proxyCache.set(targetUrl, { timestamp: Date.now(), data });
+    res.setHeader('X-Cache', 'MISS');
+    return res.json(data);
+  } catch (err) {
+    if (cached) {
+      res.setHeader('X-Cache', 'STALE');
+      return res.json(cached.data);
+    }
+    return res.status(503).json({
+      error: 'AFAD servisi geçici olarak kullanılamıyor.',
+      details: err instanceof Error ? err.message : 'Unknown error',
+    });
+  }
+});
+
 app.get('/api/:endpoint', async (req, res) => {
   const endpoint = req.params.endpoint;
   const allowed = ['status', 'events', 'seismic_history'];

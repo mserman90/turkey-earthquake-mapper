@@ -658,6 +658,15 @@ export function AnalyticsPanelRight({
                   <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                 </a>
                 <a
+                  href="https://deprem.afad.gov.tr/event-service"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-red-300 font-semibold transition"
+                >
+                  <span>AFAD Deprem Veri Servisi (deprem.afad.gov.tr/event-service)</span>
+                  <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                </a>
+                <a
                   href="https://deprem.afad.gov.tr"
                   target="_blank"
                   rel="noopener noreferrer"

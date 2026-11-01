@@ -32,6 +32,12 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
+      '/api/afad': {
+        target: 'https://deprem.afad.gov.tr/apiv2/event',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api\/afad/, ''),
+      },
       '/api': {
         target: 'https://api.udesquake.com.tr',
         changeOrigin: true,

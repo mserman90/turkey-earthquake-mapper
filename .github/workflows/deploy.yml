@@ -36,12 +36,13 @@ jobs:
       - name: Run Unit & Integration Tests
         run: npx vitest run
 
-      - name: Refresh Live UdesQuake Telemetry Snapshots
+      - name: Refresh Live UdesQuake & AFAD Telemetry Snapshots
         env:
           UDESQUAKE_API_KEY: ${{ secrets.VITE_UDESQUAKE_API_KEY }}
         run: |
           curl -s -f -H "X-API-Key: $UDESQUAKE_API_KEY" "https://api.udesquake.com.tr/api/status" -o public/status-snapshot.json || true
           curl -s -f -H "X-API-Key: $UDESQUAKE_API_KEY" "https://api.udesquake.com.tr/api/events?limit=300" -o public/events-snapshot.json || true
+          curl -s -L -k "https://deprem.afad.gov.tr/apiv2/event/filter?minmag=1.0&limit=300&format=json" -o public/afad-events-snapshot.json || true
 
       - name: Build Production Bundle
         env:
