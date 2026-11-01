@@ -14,6 +14,7 @@ import {
   BarChart3,
   Radio,
   Download,
+  ShieldAlert,
 } from 'lucide-react';
 import { TURKEY_FAULT_SEGMENTS } from './data/turkeyFaultSegments';
 import { evaluateSegmentProbability } from './lib/probabilityEngine';
@@ -289,6 +290,20 @@ export function App() {
             <span>AFAD</span>
             <ExternalLink className="w-3 h-3" />
           </a>
+
+          <button
+            type="button"
+            onClick={() => {
+              setActiveRightTab('tamp');
+              setMobileView('analysis');
+            }}
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-950/60 hover:bg-red-900/60 border border-red-500/50 text-xs font-bold text-red-200 transition cursor-pointer shadow-sm"
+            title="Türkiye Afet Müdahale Planı (TAMP Rehberi & Resmi PDF)"
+          >
+            <ShieldAlert className="w-3.5 h-3.5 text-red-400" />
+            <span className="hidden md:inline">TAMP (Afet Planı)</span>
+            <span className="md:hidden">TAMP</span>
+          </button>
 
           <button
             type="button"
@@ -580,6 +595,16 @@ export function App() {
             className="hover:text-red-300 transition flex items-center gap-1 font-medium"
           >
             <span>AFAD Event Service</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+          <a
+            href="https://www.afad.gov.tr/kurumlar/afad.gov.tr/e_Kutuphane/Planlar/TAMP.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-red-400 transition flex items-center gap-1 font-semibold text-red-300"
+            title="Türkiye Afet Müdahale Planı (Resmi AFAD PDF)"
+          >
+            <span>TAMP (Afet Planı PDF)</span>
             <ExternalLink className="w-3 h-3" />
           </a>
           <a

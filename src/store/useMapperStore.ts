@@ -30,7 +30,7 @@ interface MapperState {
   // UI & Preferences
   language: Language;
   theme: ThemeMode;
-  activeRightTab: 'segment' | 'table' | 'live' | 'methodology';
+  activeRightTab: 'segment' | 'table' | 'live' | 'methodology' | 'tamp';
 
   // Actions
   setSelectedModel: (model: RenewalModelType) => void;
@@ -50,7 +50,7 @@ interface MapperState {
   setUserLocation: (loc: { lat: number; lon: number } | null) => void;
   setLanguage: (lang: Language) => void;
   setTheme: (theme: ThemeMode) => void;
-  setActiveRightTab: (tab: 'segment' | 'table' | 'live' | 'methodology') => void;
+  setActiveRightTab: (tab: 'segment' | 'table' | 'live' | 'methodology' | 'tamp') => void;
 }
 
 export const useMapperStore = create<MapperState>()(

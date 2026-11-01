@@ -12,6 +12,8 @@ import {
   TrendingUp,
   ExternalLink,
   Heart,
+  FileText,
+  CheckCircle2,
 } from 'lucide-react';
 import type {
   FaultSegmentFeature,
@@ -108,7 +110,7 @@ export function AnalyticsPanelRight({
       className="w-full lg:w-96 xl:w-[430px] shrink-0 bg-slate-900/95 border-l border-slate-800 flex flex-col overflow-hidden text-slate-100"
     >
       {/* Navigation Tabs */}
-      <div className="grid grid-cols-4 border-b border-slate-800 bg-slate-950/70 p-1 gap-1 text-[11px] font-medium">
+      <div className="grid grid-cols-5 border-b border-slate-800 bg-slate-950/70 p-1 gap-0.5 sm:gap-1 text-[10px] sm:text-[11px] font-medium">
         <button
           type="button"
           onClick={() => setActiveRightTab('segment')}
@@ -117,9 +119,11 @@ export function AnalyticsPanelRight({
               ? 'bg-amber-500 text-slate-950 font-bold'
               : 'text-slate-400 hover:text-slate-200'
           }`}
+          title={t.tabSegmentDetail}
         >
           <BarChart3 className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">{t.tabSegmentDetail}</span>
+          <span className="truncate hidden sm:inline">{t.tabSegmentDetail}</span>
+          <span className="truncate sm:hidden">Fay</span>
         </button>
 
         <button
@@ -130,9 +134,11 @@ export function AnalyticsPanelRight({
               ? 'bg-amber-500 text-slate-950 font-bold'
               : 'text-slate-400 hover:text-slate-200'
           }`}
+          title={t.tabProbabilityTable}
         >
           <Table2 className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">{t.tabProbabilityTable}</span>
+          <span className="truncate hidden sm:inline">{t.tabProbabilityTable}</span>
+          <span className="truncate sm:hidden">Tablo</span>
         </button>
 
         <button
@@ -143,11 +149,28 @@ export function AnalyticsPanelRight({
               ? 'bg-sky-500 text-slate-950 font-bold'
               : 'text-slate-400 hover:text-slate-200'
           }`}
+          title={t.tabLiveFeed}
         >
           <Radio className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">
+          <span className="truncate hidden sm:inline">
             {t.tabLiveFeed} ({liveQuakes.length})
           </span>
+          <span className="truncate sm:hidden">Canlı ({liveQuakes.length})</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveRightTab('tamp')}
+          className={`flex items-center justify-center gap-1 py-2 px-1 rounded-md transition cursor-pointer ${
+            activeRightTab === 'tamp'
+              ? 'bg-red-500 text-white font-bold'
+              : 'text-red-400/80 hover:text-red-300'
+          }`}
+          title={t.tabTamp}
+        >
+          <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
+          <span className="truncate hidden sm:inline">{t.tabTamp}</span>
+          <span className="truncate sm:hidden">TAMP</span>
         </button>
 
         <button
@@ -158,9 +181,11 @@ export function AnalyticsPanelRight({
               ? 'bg-amber-500 text-slate-950 font-bold'
               : 'text-slate-400 hover:text-slate-200'
           }`}
+          title={t.tabMethodology}
         >
           <BookOpen className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">{t.tabMethodology}</span>
+          <span className="truncate hidden sm:inline">{t.tabMethodology}</span>
+          <span className="truncate sm:hidden">Bilim</span>
         </button>
       </div>
 
@@ -555,7 +580,168 @@ export function AnalyticsPanelRight({
           </div>
         )}
 
-        {/* TAB 4: SCIENTIFIC METHODOLOGY & LIMITATIONS */}
+        {/* TAB 4: TAMP (TÜRKİYE AFET MÜDAHALE PLANI) */}
+        {activeRightTab === 'tamp' && (
+          <div className="space-y-3.5 text-xs text-slate-300 leading-relaxed">
+            {/* Official TAMP Document Hero Banner */}
+            <div className="p-4 rounded-xl bg-gradient-to-br from-red-950/80 via-slate-950 to-slate-900 border border-red-500/40 text-slate-200 space-y-3 shadow-lg shadow-red-950/30">
+              <div className="flex items-start justify-between gap-2">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1.5">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-600 text-white">
+                      AFAD RESMİ DOKÜMANI
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      3.12 MB PDF
+                    </span>
+                  </div>
+                  <h3 className="text-sm font-bold text-white">
+                    Türkiye Afet Müdahale Planı (TAMP)
+                  </h3>
+                </div>
+                <ShieldAlert className="w-6 h-6 text-red-400 shrink-0 mt-0.5" />
+              </div>
+
+              <p className="text-[11px] text-slate-300">
+                TAMP, Türkiye’de meydana gelebilecek deprem ve diğer büyük afetlerde
+                tüm bakanlıklar, TSK, Kızılay, sivil toplum ve özel sektörün
+                görev, yetki ve koordinasyon mekanizmalarını düzenleyen ulusal
+                müdahale kılavuzudur.
+              </p>
+
+              <a
+                href="https://www.afad.gov.tr/kurumlar/afad.gov.tr/e_Kutuphane/Planlar/TAMP.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg bg-red-600 hover:bg-red-500 text-white font-bold text-xs transition cursor-pointer shadow-md shadow-red-900/40"
+              >
+                <FileText className="w-4 h-4 shrink-0" />
+                <span>Resmi TAMP Planını İncele (PDF İndir / Aç)</span>
+                <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+              </a>
+            </div>
+
+            {/* 4 Afet Müdahale Seviyesi */}
+            <div className="bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2.5">
+              <h4 className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                <span>TAMP 4 Afet Müdahale Seviyesi</span>
+              </h4>
+              <p className="text-[11px] text-slate-400">
+                Olayın büyüklüğüne göre AFAD koordinasyonunda 4 seviyede harekete geçilir:
+              </p>
+
+              <div className="space-y-2 text-[11px]">
+                <div className="p-2 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-emerald-400">Seviye 1: Yerel Olay</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">İl İçi</span>
+                  </div>
+                  <p className="text-slate-300">
+                    İl düzeyindeki yerel imkanlarla müdahale edilir. AFAD Başkanlığı izler, destek talep edilirse sevk sağlanır.
+                  </p>
+                </div>
+
+                <div className="p-2 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-sky-400">Seviye 2: Bölgesel Destek</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300">Komşu İller</span>
+                  </div>
+                  <p className="text-slate-300">
+                    İlin kapasitesini aşan durumlarda destek iller ve bölgesel lojistik depolar devreye girer.
+                  </p>
+                </div>
+
+                <div className="p-2 rounded-lg bg-slate-900/90 border border-slate-800 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-amber-400">Seviye 3: Ulusal Destek</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">Tüm Ülke</span>
+                  </div>
+                  <p className="text-slate-300">
+                    Ulusal imkanlarla müdahale edilir. İlgili tüm bakanlıklar, TSK ve sivil toplum AFAD koordinasyonunda seferber edilir.
+                  </p>
+                </div>
+
+                <div className="p-2 rounded-lg bg-red-950/40 border border-red-500/40 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-red-400">Seviye 4: Uluslararası Yardım Çağrısı</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-300 font-bold">Küresel Alarm</span>
+                  </div>
+                  <p className="text-slate-200">
+                    Ulusal kapasiteyi aşan büyük afetler (Örn: <strong>6 Şubat 2023 Kahramanmaraş Depremleri</strong>). Dışişleri Bakanlığı aracılığıyla uluslararası arama-kurtarma ve insani yardım çağrısı yapılır.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 28 Afet Hizmet Grubu ve Çözüm Ortakları */}
+            <div className="bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2">
+              <h4 className="text-xs font-bold text-slate-200">
+                28 Afet Hizmet Grubu ve Sorumlu Kurumlar
+              </h4>
+              <ul className="text-[11px] space-y-1.5 text-slate-300">
+                <li className="flex items-start gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+                  <div><strong>Arama ve Kurtarma:</strong> AFAD (Jandarma/Emniyet/TSK/İtfaiye/STK destekli)</div>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+                  <div><strong>Sağlık Hizmetleri:</strong> Sağlık Bakanlığı (112 Acil, UMKE, Sahra Hastaneleri)</div>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+                  <div><strong>Beslenme Hizmetleri:</strong> Türk Kızılayı (Sıcak yemek, gıda kolileri, aşevleri)</div>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+                  <div><strong>Barınma Hizmetleri:</strong> AFAD (Çadır kentler, konteyner kentler, tesis tahsisi)</div>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+                  <div><strong>Haberleşme:</strong> Bilgi Teknolojileri ve İletişim Kurumu (BTK) & GSM Operatörleri</div>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+                  <div><strong>Hasar Tespit:</strong> Çevre, Şehircilik ve İklim Değişikliği Bakanlığı</div>
+                </li>
+              </ul>
+            </div>
+
+            {/* Bireysel Hazırlık, Toplanma Alanı & E-Devlet */}
+            <div className="bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2.5">
+              <h4 className="text-xs font-bold text-emerald-300">
+                Bireysel Hazırlık ve Acil Durum Rehberi
+              </h4>
+              <div className="space-y-1.5 text-[11px]">
+                <a
+                  href="https://www.turkiye.gov.tr/afad-acil-toplanma-alani-sorgulama"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-sky-300 transition"
+                >
+                  <span className="font-semibold">e-Devlet Afet Toplanma Alanı Sorgula</span>
+                  <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                </a>
+
+                <div className="p-2 rounded-lg bg-slate-900/60 border border-slate-800/80 text-slate-300 space-y-1">
+                  <div className="font-bold text-amber-200">Asgari Deprem Çantası Listesi:</div>
+                  <p className="text-[10px] text-slate-400">
+                    Su (kişi başı min 2L/gün), yüksek kalorili kuru gıda, ilk yardım çantası, düdük, pilli fener & yedek pil, powerbank, reçeteli ilaçlar, kimlik/tapu fotokopileri ve nakit para.
+                  </p>
+                </div>
+
+                <div className="p-2 rounded-lg bg-slate-900/60 border border-slate-800/80 text-slate-300 flex items-center justify-between">
+                  <div>
+                    <span className="font-bold text-red-300">112 Acil Çağrı:</span>
+                    <span className="text-[10px] text-slate-400 ml-1.5">Tüm acil durumlar için tek numara</span>
+                  </div>
+                  <span className="font-mono font-bold text-red-400 text-sm">112</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5: SCIENTIFIC METHODOLOGY & LIMITATIONS */}
         {activeRightTab === 'methodology' && (
           <div className="space-y-3 text-xs text-slate-300 leading-relaxed">
             <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/40 text-amber-200 flex items-start gap-2.5">
@@ -673,6 +859,15 @@ export function AnalyticsPanelRight({
                   className="flex items-center justify-between p-2 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-200 transition"
                 >
                   <span>AFAD Deprem Dairesi Başkanlığı</span>
+                  <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                </a>
+                <a
+                  href="https://www.afad.gov.tr/kurumlar/afad.gov.tr/e_Kutuphane/Planlar/TAMP.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2 rounded-lg bg-red-950/40 hover:bg-red-900/40 border border-red-500/30 text-red-200 font-semibold transition"
+                >
+                  <span>AFAD Türkiye Afet Müdahale Planı (TAMP Resmi PDF)</span>
                   <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                 </a>
                 <a

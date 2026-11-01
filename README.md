@@ -24,7 +24,12 @@ Türkiye’deki aktif fay segmentleri için bilimsel tekrarlanma (**renewal**) m
    - **UDES (UdesQuake) API (`src/services/udesQuakeApi.ts`)**: `/api/status`, `/api/events`, `/api/seismic_history` entegrasyonu, `X-API-Key` kota desteği, 429 Exponential Backoff ve otomatik önbellekleme.
    - **AFAD Resmi Deprem Servisi (`src/services/afadApi.ts`)**: [https://deprem.afad.gov.tr/event-service](https://deprem.afad.gov.tr/event-service) üzerinden resmi AFAD katalog verisi entegrasyonu (`/apiv2/event/filter`).
    - **Çoklu Kaynak Birleştirme & Tekilleştirme**: Kullanıcı UDES, AFAD veya Tümünü (`UDES + AFAD`) seçebilir; 90 saniye ve 0.15 derece toleransla mükerrer olaylar temizlenir.
-3. **İnteraktif Türkiye Haritası (`src/components/TurkeySeismicMap.tsx`)**:
+3. **Türkiye Afet Müdahale Planı (TAMP) Entegrasyonu & Bireysel Hazırlık**:
+   - **Resmi TAMP Planı (3.12 MB PDF)**: [https://www.afad.gov.tr/kurumlar/afad.gov.tr/e_Kutuphane/Planlar/TAMP.pdf](https://www.afad.gov.tr/kurumlar/afad.gov.tr/e_Kutuphane/Planlar/TAMP.pdf)
+   - **4 Müdahale Seviyesi**: Seviye 1 (Yerel), Seviye 2 (Bölgesel Destek), Seviye 3 (Ulusal Destek), Seviye 4 (Uluslararası Yardım Çağrısı – örn: 6 Şubat 2023 Kahramanmaraş Depremleri).
+   - **28 Afet Hizmet Grubu**: Arama-kurtarma, acil sağlık, beslenme, geçici barınma, haberleşme, hasar tespit vb.
+   - **Bireysel Hazırlık Rehberi**: 112 Acil Çağrı, AFAD Acil mobil uygulaması, e-Devlet toplanma alanı sorgulama ve asgari deprem çantası listesi.
+4. **İnteraktif Türkiye Haritası (`src/components/TurkeySeismicMap.tsx`)**:
    - Ücretsiz ve API anahtarı gerektirmeyen (**keyless**) **OpenStreetMap** harita altyapısı (Koyu / Açık tema filtreli)
    - MTA Diri Fay Haritası ve paleosismoloji literatürüyle uyumlu **12 ana aktif fay segmenti** (KAF Kuzey/Orta Kol, Yedisu, Erzincan-Niksar, DAF Palu-Bingöl, Pazarcık-Amanos, İzmir-Tuzla, Büyük Menderes, Tuz Gölü-Ecemiş)
    - **Zaman Kaydırıcı (Scenario Time Slider):** Bugünden +50 yıla kadar (2026–2076) senaryo simülasyonu
@@ -53,6 +58,7 @@ Bu açık kaynaklı bilimsel farkındalık ve görselleştirme projesinin hayata
 | **UDES (UdesQuake)** | Gerçek Zamanlı Deprem Takip, Erken Uyarı ve Çoklu-Ajans Veri Platformu | [https://udesquake.com.tr](https://udesquake.com.tr) |
 | **UDES (UdesQuake) API** | Canlı Depremler (`/api/events`), Sistem Durumu (`/api/status`) ve Bölgesel Geçmiş (`/api/seismic_history`) | [https://api.udesquake.com.tr/api/status](https://api.udesquake.com.tr/api/status) |
 | **AFAD Deprem Veri Servisi** | T.C. İçişleri Bakanlığı AFAD Resmi Deprem Bilgi ve Olay Servisi (`/apiv2/event/filter`) | [https://deprem.afad.gov.tr/event-service](https://deprem.afad.gov.tr/event-service) |
+| **AFAD TAMP (Afet Planı)** | Türkiye Afet Müdahale Planı Resmi Kılavuzu (3.12 MB PDF) | [https://www.afad.gov.tr/kurumlar/afad.gov.tr/e_Kutuphane/Planlar/TAMP.pdf](https://www.afad.gov.tr/kurumlar/afad.gov.tr/e_Kutuphane/Planlar/TAMP.pdf) |
 | **MTA Genel Müdürlüğü** | Türkiye Yenilenmiş Diri Fay Haritaları ve Yerbilimleri Portalı | [https://www.mta.gov.tr/v3.0/hizmetler/yenilenmis-diri-fay-haritalari](https://www.mta.gov.tr/v3.0/hizmetler/yenilenmis-diri-fay-haritalari) |
 | **AFAD** | T.C. İçişleri Bakanlığı Afet ve Acil Durum Yönetimi Başkanlığı – Deprem Katalogları | [https://deprem.afad.gov.tr](https://deprem.afad.gov.tr) |
 | **Kandilli Rasathanesi (KOERI)** | Boğaziçi Üniversitesi Bölgesel Deprem-Tsunami İzleme ve Değerlendirme Merkezi | [http://www.koeri.boun.edu.tr/scripts/lst5.asp](http://www.koeri.boun.edu.tr/scripts/lst5.asp) |
